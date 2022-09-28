@@ -2,6 +2,8 @@ import reactLogo from './assets/react.svg'
 import './App.css'
 import {useAppDispatch, useAppSelector} from './hooks'
 import {increment, incrementByAmount, selectCount} from './features/counter/counterSlice'
+import {useEffect} from 'react'
+import {fetchLang} from './features/translate/translateSlice'
 
   
   
@@ -9,7 +11,11 @@ import {increment, incrementByAmount, selectCount} from './features/counter/coun
 const  App = () => {
     // get the counter state
     const {value} = useAppSelector( store => store.counter)
+    const  {data, loading} = useAppSelector(store => store.translate)
     const dispatch = useAppDispatch() 
+    useEffect( () => {
+     dispatch(fetchLang('FR')) 
+    }, [])
 
     const handleClick = () => {
        // console.log(dispatch) 

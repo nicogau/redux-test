@@ -13,10 +13,10 @@ type Translate = {
     loading: 'idle' | 'pending' | 'succeeded' | 'failed'
 }
 
-const fetchLang = createAsyncThunk<TranslateLang, Language>('lang/fetch',
-    async (lang: Language)  => {
+const fetchLang = createAsyncThunk<TranslateLang, Language>('translate/fetch',
+    async (lang: Language, thunkApi)  => {
        try {
-        const res = await fetch( `https://dev.merlo-ch.com/api/api.php?trad=1&langue=${lang}`)
+        const res = await fetch( `https://dev.merlo-ch.com/api/api.php?trad=1`)
         const resJson= await res.json() as TranslateLang
         return resJson
        }
@@ -42,11 +42,23 @@ const translateSlice = createSlice({
     extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
     builder.addCase(fetchLang.fulfilled, (state, action) => {
-      // Add user to the state array
+      //  data are loaded 
       state.data = action.payload
-    // })
-
-   
+      state.loading = 'succeeded'
+     })
+     // doesn t have the return value yet
+     .addCase(fetchLang.pending, (state, action) => {
+      state.loading = 'pending'
+     })
+     // request doesn't succeeded
+     .addCase(fetchLang.rejected, (state, action) => {
+      state.loading = 'failed'
+     })
+    }
 })
 
-export default translateSlice.
+   
+
+export default  translateSlice.reducer
+export {fetchLang}
+
